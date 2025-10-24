@@ -16,9 +16,7 @@ public:
 
 	/// Конструктор по умолчанию
 	Heap()
-	{
-		size = 0;
-	}
+	{ }
 
 	/// Конструктор с параметрами
 	/// Сложность: O(n)
@@ -127,7 +125,11 @@ public:
 		{
 			throw runtime_error("Пустая куча"); // бросаем исключение
 		}
-		array.pop_back(); // удаляем корень
+		if (array.size() == 1)
+		{
+			array.pop_back();
+			return;
+		}
 		array[0] = array[array.size() - 1]; // ставим на место корня самый правый лист
 		array.pop_back(); // удаляем лист
 		down(0); // упорядочиваем кучу по условиям кучи
@@ -144,13 +146,12 @@ public:
 		}
 		for (size_t i = 0; i < array.size(); ++i)
 		{
-			if (data[i] == ind) // если элемент найден
+			if (array[i] == ind) // если элемент найден
 			{
 				return i; // возвращаем индекс элемента
 			}
 		}
-		string s = "Элемент не найден"; // сообщение
-		return s; // пишем, что элемент не найден
+		throw runtime_error("Элемента нет"); // бросаем исключение
 	}
 
 	/// Вывод кучи из динамического массива
@@ -163,3 +164,24 @@ public:
 		}
 	}
 };
+
+/// Функция сортировки кучей
+/// Сложность: O(n log n)
+/// dynamic_array<T>& arr - массив
+template <typename T>
+void Sort_heap(dynamic_array<T>& arr)
+{
+	size_t n = arr.size();
+	if (n <= 1)
+	{
+		return;
+	}
+	Heap<T> heap(arr); // строим минимальную кучу из массива
+	for (size_t i = 0; i < n; ++i)
+	{
+		arr[i] = heap.root(); // берём корень кучи(самый минимальный элемент)
+		heap.delite_root(); // удаляем корень кучи
+	}
+}
+
+void test();
